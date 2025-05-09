@@ -1,4 +1,4 @@
-import { apiSlice } from '../api/apiSlice';
+import  {apiSlice}  from '../api/apiSlice';
 
 export const authApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -8,6 +8,7 @@ export const authApi = apiSlice.injectEndpoints({
         method: 'POST',
         body: data,
       }),
+      invalidatesTags:["Users"]
     }),
     login: builder.mutation({
       query: (data) => ({
@@ -15,6 +16,7 @@ export const authApi = apiSlice.injectEndpoints({
         method: 'POST',
         body: data,
       }),
+      invalidatesTags:["Users"]
     }),
   }),
 });

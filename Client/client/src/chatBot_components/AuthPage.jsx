@@ -8,7 +8,9 @@ import { useLoginMutation, useRegisterMutation } from '../features/auth/authApi'
 export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
   const [form, setForm] = useState({ username: '', email: '', password: '' });
+
   const [login] = useLoginMutation();
+
   const [register] = useRegisterMutation();
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
@@ -17,10 +19,14 @@ export default function AuthPage() {
     try {
       const action = isLogin ? login : register;
       const res = await action(form).unwrap();
+      console.log(form);
+      
       if (res.token) localStorage.setItem('token', res.token);
       window.location.href = '/';
     } catch (err) {
-      alert(err.data?.msg || 'שגיאה');
+      console.log(err);
+      
+      alert(err?.data?.msg || 'שגיאה');
     }
   };
 
