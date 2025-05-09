@@ -1,0 +1,160 @@
+/* .signup-page {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-image: url('./assets/background.jpg'); 
+    background-size: cover;
+    background-position: center;
+  }
+  
+  .signup-card {
+    width: 100%;
+    max-width: 500px;
+    padding: 2rem;
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    background-color: #fff;
+    border-radius: 12px;
+  }
+  
+ 
+  .p-inputtext {
+    border: 1px solid #ccc !important;
+    border-radius: 6px !important;
+  }
+  
+  
+  .p-password input {
+    border: 1px solid #ccc !important;
+    border-radius: 6px !important;
+  }
+  
+  
+  
+  .signup-card h2 {
+    text-align: center;
+    color: #00c6ff;
+    margin-bottom: 1rem;
+  }
+  
+  .p-field label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+  }
+  
+  .p-inputtext,
+  .p-password input {
+    width: 100%;
+    padding: 0.6rem;
+    border-radius: 8px;
+    border: none;
+    background-color: #ffffff10;
+    color: #ffffff10;
+    ;
+  }
+  
+  .p-inputtext:focus,
+  .p-password input:focus {
+    outline: 2px solid #00c6ff;
+  }
+  
+  .p-dropdown {
+    width: 100%;
+  }
+  
+  .p-button {
+    margin-top: 1rem;
+    width: 100%;
+    border-radius: 8px;
+  }
+  
+  .login-link {
+    margin-top: 1rem;
+    text-align: center;
+    color: #ddd;
+  }
+  
+  .login-link button {
+    background: none;
+    border: none;
+    color: #00c6ff;
+    cursor: pointer;
+    font-weight: bold;
+  }
+   */
+
+
+   .signup-page {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f9f9f9; 
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.signup-card {
+    width: 100%;
+    max-width: 480px;
+    padding: 2.5rem;
+    border-radius: 12px;
+    background-color: #ffffff;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+.signup-card h2 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 1.5rem;
+}
+
+.p-field label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.p-inputtext,
+.p-password input {
+    width: 100%;
+    padding: 0.75rem;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+    color: #2c3e50;
+}
+
+.p-inputtext:focus,
+.p-password input:focus {
+    outline: none;
+    border: 1px solid #3498db;
+    box-shadow: 0 0 3px #3498db;
+}
+
+.p-button {
+    border-radius: 8px;
+    font-weight: 600;
+    padding: 0.75rem;
+    transition: background-color 0.3s ease;
+}
+
+.p-button.p-button-primary {
+    background-color: #00bcd4;
+    border: none;
+}
+
+.p-button.p-button-primary:hover {
+    background-color: #0097a7;
+}
+
+.p-button.p-button-secondary {
+    background-color: #e0e0e0;
+    color: #333;
+    border: none;
+}
+
+.p-button.p-button-secondary:hover {
+    background-color: #d5d5d5;
+}
