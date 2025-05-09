@@ -23,4 +23,17 @@ const returnMessage=async (req, res) => {
     res.json(chat?.messages || []);
   }  
 
-module.exports= {createMessage,returnMessage}  
+const returnAutoMessage=async(req, res) => {
+    const { content, role } = req.body;
+  
+    const userMessage = new Message({ content, role });
+    await userMessage.save();
+  
+    const botContent = `הבוט ענה: קיבלתי "${content}"`;
+    const botMessage = new Message({ content: botContent, role: 'bot' });
+    await botMessage.save();
+  
+    res.status(201).json({ userMessage, botMessage });
+  }  
+
+module.exports= {createMessage,returnMessage,returnAutoMessage}  
