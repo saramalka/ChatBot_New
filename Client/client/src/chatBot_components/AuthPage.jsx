@@ -25,8 +25,6 @@ export default function AuthPage() {
       window.location.href = '/';
     } catch (err) {
       console.log(err);
-      
-      alert(err?.data?.msg || 'שגיאה');
     }
   };
 

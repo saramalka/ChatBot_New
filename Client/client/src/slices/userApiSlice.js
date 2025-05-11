@@ -51,7 +51,7 @@ const userApiSlice=apiSlice.injectEndpoints({
                 method:"PUT",
                 body:user
             }),
-            invalidatesTags:["Uesrs"] 
+            invalidatesTags:["Users"] 
         }),
          
     })

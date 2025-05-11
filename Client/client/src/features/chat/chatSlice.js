@@ -1,6 +1,6 @@
-import {apiSlice}   from '../api/apiSlice';
+import apiSlice   from '../api/apiSlice';
 
-export const chatApi = apiSlice.injectEndpoints({
+export const chatSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getMessages: builder.query({
       query: () => '/chat',
@@ -11,10 +11,14 @@ export const chatApi = apiSlice.injectEndpoints({
         url: '/chat',
         method: 'POST',
         body,
+        headers: {
+          'Content-Type': 'application/json', },
       }),
       invalidatesTags: ['Chat'],
     }),
   }),
 });
 
-export const { useGetMessagesQuery, useSendMessageMutation } = chatApi;
+export const {useGetMessagesQuery,useSendMessageMutation} = chatSlice;
+
+

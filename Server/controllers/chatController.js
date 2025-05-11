@@ -9,7 +9,7 @@ const createMessage=async (req, res) => {
     if (!chat) {
       chat = new Chat({ userId: req.user.id, messages: [] });
     }
-  
+
     chat.messages.push({ role: 'user', content: message });
     chat.messages.push({ role: 'bot', content: botReply });
   
@@ -24,9 +24,8 @@ const returnMessage=async (req, res) => {
   }  
 
 const returnAutoMessage=async(req, res) => {
-    const { content, role } = req.body;
-  
-    const userMessage = new Message({ content, role });
+    const { content, role } = req.body
+    const userMessage = new Message({ content, role })
     await userMessage.save();
   
     const botContent = `הבוט ענה: קיבלתי "${content}"`;

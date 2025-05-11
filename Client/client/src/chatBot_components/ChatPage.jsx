@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Card } from 'primereact/card';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
-import { useGetMessagesQuery, useSendMessageMutation } from '../features/chat/chatApi';
+import { useGetMessagesQuery, useSendMessageMutation } from '../features/chat/chatSlice';
 
 export default function ChatPage() {
   const { data: messages = [], refetch } = useGetMessagesQuery();
