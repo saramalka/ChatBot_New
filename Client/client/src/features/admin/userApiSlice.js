@@ -1,23 +1,23 @@
 
-import apiSlice from "./apiSlice";
+import apiSlice from "../api/apiSlice";
 
 const userApiSlice=apiSlice.injectEndpoints({
     endpoints:(build)=>({
       getUsers:build.query({
             query:()=>({
-                url:"/api/user"
+                url:"/users"
             }),
             providesTags:["Users"]
         }),
       getUserById:build.query({
             query:(id)=>({
-                url:`/api/user/${id}`
+                url:`/users/${id}`
             }),
             
         }),
       addUser:build.mutation({
           query:(user)=>({
-            url:'/api/register',
+            url:'/users/register',
             method:'POST',
             body:user
           }),
@@ -25,29 +25,28 @@ const userApiSlice=apiSlice.injectEndpoints({
        }),
       loginUser: build.mutation({
         query: (user) => ({
-          url: '/api/login',
+          url: '/login',
           method: 'POST',
           body: user,
         }),
       }),
       checkEmail: build.mutation({
         query: (email) => ({
-          url: '/api/user/check-email',
+          url: '/users/check-email',
           method: 'POST',
           body: {email},
         }),
       }),
-      deleteUser:build.mutation({
-            query:(user)=>({
-                url:`/api/user`,
-                method:'DELETE',
-                body: { id: user._id },
+      deleteUser: build.mutation({
+        query: (userId) => ({
+          url: `/users/${userId}`,
+          method: 'DELETE',
         }),
-        invalidatesTags:["Users"]
-        }),
+        invalidatesTags: ['Users'],
+      }),      
       editUser:build.mutation({
             query:(user)=>({
-                url:`api/user`,
+                url:`users`,
                 method:"PUT",
                 body:user
             }),
@@ -57,7 +56,8 @@ const userApiSlice=apiSlice.injectEndpoints({
     })
 })
 
-export const {useAddUserMutation,
+export const {
+  useAddUserMutation,
     useDeleteUserMutation,
     useEditUserMutation,
     useGetUserByIdQuery,

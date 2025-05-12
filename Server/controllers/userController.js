@@ -11,11 +11,13 @@ const getUsers=async(req,res)=>{
 }
 
 const register= async (req, res) => {
-  const { username, email, password } = req.body;
+  const { username, email, password ,role} = req.body;
   if(!username||!email||!password)
     return res.status(400).send('username, email and password are required')
   const hash = await bcrypt.hash(password, 10);
-  const user = User.create({ username, email, password: hash });
+  const userRole = role === "admin" ? "admin" : "user";
+
+  const user = User.create({ username, email, password: hash,role:userRole });
   if(!user)
     return res.status(400).send('fail to register')
   return res.json({ msg: 'User registered' });
@@ -56,12 +58,13 @@ if(password){
 
 }
 
-const deleteUser=async(req,res)=>{
-  const {id}=req.body
-  const user=await User.findByIdAndDelete(id)
-  if(!user)
-    return res.status(400).send('failed to delete user')
-  res.send('delete user succses')
-}
+const deleteUser = async (req, res) => {
+  const { id } = req.params;
+  const user = await User.findByIdAndDelete(id);
+
+  if (!user) return res.status(404).send('User not found');
+  res.send('User deleted successfully');
+};
+
 
 module.exports={register,login,updateUser,getUsers,deleteUser}
