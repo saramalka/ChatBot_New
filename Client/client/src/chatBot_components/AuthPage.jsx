@@ -17,10 +17,11 @@ export default function AuthPage() {
 
   const handleSubmit = async () => {
     try {
-      const action = isLogin ? login : register;
-      const res = await action(form).unwrap();
-      console.log(form);
-      
+      const action = isLogin
+        ? login({ email: form.email, password: form.password }) 
+        : register(form);
+      const res = await action.unwrap();
+  
       if (res.token) localStorage.setItem('token', res.token);
       localStorage.setItem("user", JSON.stringify(res));
       window.location.href = '/';
@@ -28,6 +29,7 @@ export default function AuthPage() {
       console.log(err);
     }
   };
+  
 
   return (
     <div className="flex justify-content-center align-items-center h-screen">
