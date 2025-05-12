@@ -5,7 +5,7 @@ const userSchema = new mongoose.Schema({
   email: String,
   role:{
     type: String,
-    enum: ['Admin', 'User'], 
+    enum: ['admin', 'user'], 
     default: 'User'
   },
   password: String

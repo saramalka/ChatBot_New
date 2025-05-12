@@ -15,6 +15,14 @@ export const answerApi = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ['QuickReplies'],
     }),
+    updateQuickReply: builder.mutation({
+        query: (updatedReply) => ({
+            url: `/replay/${updatedReply._id}`, 
+            method: 'PUT',
+            body: updatedReply, 
+        }),
+        invalidatesTags: ['QuickReplies'],
+      }),
     deleteQuickReply: builder.mutation({
       query: (id) => ({
         url: `/replay/${id}`,
@@ -28,5 +36,6 @@ export const answerApi = apiSlice.injectEndpoints({
 export const {
   useGetQuickRepliesQuery,
   useAddQuickReplyMutation,
+  useUpdateQuickReplyMutation,
   useDeleteQuickReplyMutation,
 } = answerApi;

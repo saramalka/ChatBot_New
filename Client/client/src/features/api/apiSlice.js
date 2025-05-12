@@ -5,7 +5,6 @@ const apiSlice=createApi({
     baseQuery:fetchBaseQuery({
         baseUrl: "http://localhost:2200/api",
         credentials:'include',
-        tagTypes: ['User'],
         prepareHeaders:(headers,{getState})=>{
             const token = getState().auth.token;
             if (token) {
@@ -14,6 +13,7 @@ const apiSlice=createApi({
               return headers;
         }    
     }),
+    tagTypes: ['User', 'QuickReplies'],
     endpoints:()=>({})
 
 })

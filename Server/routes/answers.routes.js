@@ -2,14 +2,14 @@
 const express = require('express');
 const router = express.Router();
 const answerController=require("../controllers/answersController")
-const {isAdmin}=require("../middlewares/authMiddleware")
+const {auth,isAdmin}=require("../middlewares/authMiddleware")
 
 router.get('/',answerController.getAnswers );
 
-router.post('/', isAdmin,answerController.createAnswer );
+router.post('/',auth, isAdmin,answerController.createAnswer );
 
-router.put('/:id', isAdmin, answerController.updateAnswer);
+router.put('/:id', auth,isAdmin, answerController.updateAnswer);
 
-router.delete('/:id', isAdmin,answerController.deleteAnswer);
+router.delete('/:id',auth, isAdmin,answerController.deleteAnswer);
 
 module.exports = router;
