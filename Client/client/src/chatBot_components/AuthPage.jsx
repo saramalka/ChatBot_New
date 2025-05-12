@@ -22,6 +22,7 @@ export default function AuthPage() {
       console.log(form);
       
       if (res.token) localStorage.setItem('token', res.token);
+      localStorage.setItem("user", JSON.stringify(res));
       window.location.href = '/';
     } catch (err) {
       console.log(err);

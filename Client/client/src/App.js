@@ -8,11 +8,15 @@ import AppRoutes from "./routes";
 import { BrowserRouter } from "react-router-dom";
 import Navbar from './chatBot_components/Navbar';
 
+
 function App() {
+  const user = JSON.parse(localStorage.getItem("user"));
+const isAdmin = user?.role === "Admin";
+
   return (
     <>
     <BrowserRouter >
-      <Navbar/>
+      <Navbar isAdmin={isAdmin}/>
       <AppRoutes /> 
     </BrowserRouter>
     </>
