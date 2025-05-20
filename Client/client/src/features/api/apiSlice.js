@@ -13,7 +13,8 @@ const apiSlice=createApi({
               return headers;
         }    
     }),
-    tagTypes: ['User', 'QuickReplies'],
+    tagTypes: ['User', 'QuickReplies', 'Chat'],
+
     endpoints:()=>({})
 
 })

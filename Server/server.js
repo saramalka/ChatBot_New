@@ -4,7 +4,7 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const userRoutes = require('./routes/user.routes');
 const chatRoutes = require('./routes/chat.routes');
-const answerRoutes=require("./routes/answers.routes")
+const answerRoutes=require("./routes/chatNode.routes")
 const corsOptions=require("./config/corsOptions")
 const connectDB=require("./config/dbconn")
 
