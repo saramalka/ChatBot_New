@@ -21,7 +21,7 @@ export default function Component() {
   const [initialGoals, setInitialGoals] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [showChat, setShowChat] = useState(false);
-  const userName = localStorage.getItem('userName');
+  const userName = localStorage.getItem('username');
 const { data: fetchedHealthData } = useGetHealthDataQuery();
   const { data: fetchedGoals, isLoading: goalsLoading } = useGetInitialGoalsQuery();
   const [saveHealthData] = useSaveHealthDataMutation();
@@ -83,7 +83,8 @@ useEffect(() => {
 
       <div className="form-section">
         <h3>נתוני תזונה ובריאות</h3>
-        <form onSubmit={e => { e.preventDefault(); saveHealthData(); }}>
+        <form onSubmit={e => { e.preventDefault(); handleSave(); }}>
+
           <label>משקל: <input type="number" value={healthData.weight} onChange={e => setHealthData({ ...healthData, weight: e.target.value })} /></label>
           <label>גובה: <input type="number" value={healthData.height} onChange={e => setHealthData({ ...healthData, height: e.target.value })} /></label>
           <label>גיל: <input type="number" value={healthData.age} onChange={e => setHealthData({ ...healthData, age: e.target.value })} /></label>

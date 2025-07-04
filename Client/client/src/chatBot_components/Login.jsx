@@ -24,9 +24,12 @@ const handleChange = (e) => {
   const handleLogin = async () => {
     try {
       const res = await loginUser(form).unwrap();
-      console.log('Login successful:', res);
+      console.log('res from login:', res);
       localStorage.setItem('token', res.token);
-      localStorage.setItem('userName', res.username);
+      localStorage.setItem('username', res.username);
+
+      localStorage.setItem('userRole', res.role);
+      alert('התחברות בוצעה בהצלחה');
       navigate('/chat');
     } catch (err) {
       console.error(err);
@@ -48,6 +51,7 @@ const handleChange = (e) => {
     e.preventDefault();
     try {
       const res = await checkEmail(form.email).unwrap();
+      debugger;
       if (res.exists) {
         handleLogin();
       } else {

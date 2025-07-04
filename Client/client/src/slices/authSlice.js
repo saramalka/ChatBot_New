@@ -5,7 +5,7 @@ const authSlice=createSlice({
     initialState:{
         token:localStorage.getItem("token")||"",
         isLoggedIn:localStorage.getItem("token")?true:false,
-        name:localStorage.getItem("name") || "",    
+        name:localStorage.getItem("username") || "",    
     },
     reducers:{
         setToken:(state,action)=>{
@@ -15,7 +15,7 @@ const authSlice=createSlice({
             state.name=name
             
             localStorage.setItem("token",token)
-            localStorage.setItem("name", name)
+            localStorage.setItem("username", name)
            
 
         },
@@ -25,7 +25,7 @@ const authSlice=createSlice({
             state.name=""
     
             localStorage.removeItem("token")
-            localStorage.removeItem("name")
+            localStorage.removeItem("username")
            
         }
     }

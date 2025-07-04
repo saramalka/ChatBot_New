@@ -8,7 +8,7 @@ const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 router.get('/initial', auth, chatController.initial);
 router.post('/updateNutritionGoals', auth, chatController.updateNutritionGoals);
 router.post('/', auth,chatController.createMessage);
-router.get('/initial', auth,chatController.createMessage);
+// router.get('/initial', auth,chatController.createMessage);
 router.get('/', auth, chatController.returnMessage);
 router.post('/api/messages', auth,chatController.returnAutoMessage );
 router.get('/all', auth, chatController.all);
