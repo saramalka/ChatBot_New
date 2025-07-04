@@ -1,6 +1,6 @@
 import { useState } from "react";
-import  ChatPage from './chatBot_components/ChatPage'
-import  AuthPage from './chatBot_components/AuthPage'
+import  Chat from './chatBot_components/Chat'
+import  Login from './chatBot_components/Login'
 import AdminQuickRepliesPage from "./chatBot_components/AdminQuickRepliesPage";
 import { Routes, Route, Navigate } from "react-router-dom";
 import UsersPage from "./chatBot_components/UsersPage";
@@ -27,8 +27,8 @@ const AppRoutes = () => {
 
   return (
     <Routes>
-     <Route path="/" element={<ChatPage />} />
-       <Route path="/auth" element={<AuthPage/>}/> 
+     <Route path="/" element={<Chat />} />
+       <Route path="/auth" element={<Login/>}/> 
        <Route path="/admin/replies" element={<AdminQuickRepliesPage />} />
        <Route path="/admin/users" element={<UsersPage />} />
       {/* <Route path="/login" element={<LoginForm onLogin={handleLogin}/>} />

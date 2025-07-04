@@ -10,19 +10,30 @@ const getUsers=async(req,res)=>{
   res.json(users)
 }
 
-const register= async (req, res) => {
-  const { username, email, password ,role} = req.body;
-  if(!username||!email||!password)
-    return res.status(400).send('username, email and password are required')
-  const hash = await bcrypt.hash(password, 10);
-  const userRole = role === "admin" ? "admin" : "user";
+const register = async (req, res) => {
+  try {
+    const { username, email, password, role } = req.body;
 
-  const user = User.create({ username, email, password: hash,role:userRole });
-  if(!user)
-    return res.status(400).send('fail to register')
-  return res.json({ msg: 'User registered' });
+    if (!username || !email || !password) {
+      return res.status(400).send('username, email and password are required');
+    }
 
-}
+    const hash = await bcrypt.hash(password, 10);
+    const userRole = role === "admin" ? "admin" : "user";
+
+    const user = await User.create({ username, email, password: hash, role: userRole });
+
+    if (!user) {
+      return res.status(400).send('fail to register');
+    }
+
+    return res.json({ msg: 'User registered' });
+  } catch (error) {
+    console.error('Register error:', error);
+    return res.status(500).send('Server error during registration');
+  }
+};
+
 
 const login=async (req, res) => {
   const { email, password } = req.body;
@@ -65,6 +76,12 @@ const deleteUser = async (req, res) => {
   if (!user) return res.status(404).send('User not found');
   res.send('User deleted successfully');
 };
+const checkUser=async (req, res) => {
+  const { email } = req.query;
+  if (!email) return res.status(400).json({ error: 'Email is required' });
 
+  const user = await User.findOne({ email });
+   res.json({ exists: !!user });
+};
 
-module.exports={register,login,updateUser,getUsers,deleteUser}
+module.exports={register,login,updateUser,getUsers,deleteUser,checkUser}
