@@ -9,10 +9,12 @@ const corsOptions=require("./config/corsOptions")
 const connectDB=require("./config/dbconn")
 
 const app = express();
-const PORT=process.env.PORT||3000
+const PORT=process.env.PORT||2200
 connectDB()
 
-app.use(cors(corsOptions))
+app.use(cors(corsOptions));
+
+
 app.use(express.json());
 
 app.use('/api/auth', userRoutes);

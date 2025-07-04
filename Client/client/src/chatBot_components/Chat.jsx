@@ -1,41 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-
+import {
+  useGetMessagesQuery,
+  useSendMessageMutation,
+} from '../features/chat/chatSlice';
+import '../styles/chat.css';
 const ChatComponent = () => {
-  const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
   const [isBotTyping, setIsBotTyping] = useState(false);
 
-  useEffect(() => {
-    loadMessages();
-  }, []);
+  const { data: messages = [], refetch } = useGetMessagesQuery();
+  const [sendMessage] = useSendMessageMutation();
 
-  const loadMessages = async () => {
-    try {
-      const token = localStorage.getItem('token');
-      const res = await axios.get('http://localhost:3000/api/chat/all', {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setMessages(res.data);
-    } catch (err) {
-      console.error('Error loading messages', err);
-    }
-  };
-
-  const sendMessage = async () => {
+  const handleSend = async () => {
     if (!newMessage.trim()) return;
-
     try {
-      const token = localStorage.getItem('token');
       setIsBotTyping(true);
-      const res = await axios.post(
-        'http://localhost:3000/api/chat',
-        { message: newMessage },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-
-      setMessages((prev) => [...prev, { userMessage: newMessage, botReply: res.data.reply }]);
+      await sendMessage({ message: newMessage }).unwrap();
       setNewMessage('');
+      refetch();
     } catch (err) {
       console.error('Error sending message', err);
     } finally {
@@ -62,7 +45,7 @@ const ChatComponent = () => {
           onChange={(e) => setNewMessage(e.target.value)}
           placeholder="כתוב הודעה..."
         />
-        <button onClick={sendMessage}>שלח</button>
+        <button onClick={handleSend}>שלח</button>
       </div>
     </div>
   );

@@ -1,9 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import '../styles/NutritionComponent.css'; 
+import '../styles/nutritition.css';
+import '../styles/AuthPage.css';
 import ChatComponent from './Chat';
+import {
+  useGetInitialGoalsQuery,
+  useUpdateNutritionGoalsMutation,
+  useSaveHealthDataMutation,
+  useGetHealthDataQuery,
+} from '../features/chat/chatSlice';
 
-export default function NutritionComponent() {
+
+export default function Component() {
   const [healthData, setHealthData] = useState({
     weight: '',
     height: '',
@@ -15,43 +22,37 @@ export default function NutritionComponent() {
   const [isLoading, setIsLoading] = useState(false);
   const [showChat, setShowChat] = useState(false);
   const userName = localStorage.getItem('userName');
-
+const { data: fetchedHealthData } = useGetHealthDataQuery();
+  const { data: fetchedGoals, isLoading: goalsLoading } = useGetInitialGoalsQuery();
+  const [saveHealthData] = useSaveHealthDataMutation();
+  const [updateNutritionGoals] = useUpdateNutritionGoalsMutation();
   const token = localStorage.getItem('token');
   const headers = { Authorization: `Bearer ${token}` };
 
+
+useEffect(() => {
+  if (fetchedHealthData) {
+    setHealthData({
+      weight: fetchedHealthData.weight || '',
+      height: fetchedHealthData.height || '',
+      age: fetchedHealthData.age || '',
+      gender: fetchedHealthData.gender || '',
+      allergies: fetchedHealthData.allergies || ''
+    });
+  }
+}, [fetchedHealthData]);
+
+
   useEffect(() => {
-    loadHealthData();
-  }, []);
-
-  const loadHealthData = async () => {
-    try {
-      const { data } = await axios.get('http://localhost:3000/api/chat/healthDataGet', { headers });
-      if (data) {
-        setHealthData(data);
-        loadHealthDataAI();
-      }
-    } catch (err) {
-      console.error('Error loading health data', err);
+    if (fetchedGoals && fetchedGoals.nutritionGoals) {
+      setInitialGoals(fetchedGoals.nutritionGoals);
     }
-  };
+  }, [fetchedGoals]);
 
-  const loadHealthDataAI = async () => {
-    setIsLoading(true);
+  const handleSave = async () => {
     try {
-      const { data } = await axios.get('http://localhost:3000/api/chat/initial', { headers });
-      setInitialGoals(data.nutritionGoals || []);
-    } catch (err) {
-      console.error('Error loading goals', err);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const saveHealthData = async () => {
-    try {
-      await axios.post('http://localhost:3000/api/chat/healthData', healthData, { headers });
+      await saveHealthData(healthData).unwrap();
       alert('הנתונים נשמרו בהצלחה');
-      loadHealthDataAI();
     } catch (err) {
       alert('שגיאה בשמירה');
     }
@@ -62,7 +63,7 @@ export default function NutritionComponent() {
     updatedGoals[index].status = newStatus;
     setInitialGoals(updatedGoals);
     try {
-      await axios.post('http://localhost:3000/api/chat/updateNutritionGoals', updatedGoals, { headers });
+      await updateNutritionGoals(updatedGoals).unwrap();
     } catch (err) {
       alert('שגיאה בעדכון סטטוס');
     }
@@ -76,7 +77,6 @@ export default function NutritionComponent() {
       default: return status;
     }
   };
-
   return (
     <div className={`page-container ${initialGoals.length === 0 ? 'only-form' : ''}`}>
       <div className="title">ברוך/ה הבא/ה {userName}</div>

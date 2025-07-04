@@ -4,16 +4,16 @@ const apiSlice=createApi({
     reducerPath:'api',
     baseQuery:fetchBaseQuery({
         baseUrl: "http://localhost:2200/api",
-        credentials:'include',
-        prepareHeaders:(headers,{getState})=>{
-            const token = getState().auth.token;
-            if (token) {
-                headers.set("authorization", `Bearer ${token}`);
-              }
-              return headers;
-        }    
+       credentials: 'include',
+    prepareHeaders: (headers) => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            headers.set("authorization", `Bearer ${token}`);
+     }
+    return headers;
+  }
     }),
-    tagTypes: ['User', 'QuickReplies', 'Chat'],
+    tagTypes: ['User', 'QuickReplies', 'Chat', 'Goals', 'HealthData'],
 
     endpoints:()=>({})
 

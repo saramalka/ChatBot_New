@@ -4,6 +4,7 @@ import  Login from './chatBot_components/Login'
 import AdminQuickRepliesPage from "./chatBot_components/AdminQuickRepliesPage";
 import { Routes, Route, Navigate } from "react-router-dom";
 import UsersPage from "./chatBot_components/UsersPage";
+import NutritionComponent from "./chatBot_components/Nutrition";
 
 // import LoginForm from "./Components/login";
 // import SignUpForm from "./Components/register";
@@ -27,8 +28,8 @@ const AppRoutes = () => {
 
   return (
     <Routes>
-     <Route path="/" element={<Chat />} />
-       <Route path="/auth" element={<Login/>}/> 
+     <Route path="/chat" element={<NutritionComponent />} />
+       <Route path="/" element={<Login/>}/> 
        <Route path="/admin/replies" element={<AdminQuickRepliesPage />} />
        <Route path="/admin/users" element={<UsersPage />} />
       {/* <Route path="/login" element={<LoginForm onLogin={handleLogin}/>} />

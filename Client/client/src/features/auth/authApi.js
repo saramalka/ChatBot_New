@@ -18,6 +18,14 @@ export const authApi = apiSlice.injectEndpoints({
       }),
       invalidatesTags:["Users"]
     }),
+     check: builder.mutation({
+      query: (data) => ({
+        url: '/users/check-user',
+        method: 'GET',
+        
+      }),
+      invalidatesTags:["Users"]
+    }),
   }),
 });
 

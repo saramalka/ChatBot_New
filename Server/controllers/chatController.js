@@ -2,6 +2,11 @@ const Chat = require('../models/ChatMessage');
 const ChatNode = require('../models/HealthDataUser');
 const mongoose=require("mongoose")
 const HealthDataUser = require('../models/HealthDataUser');
+const { OpenAI } = require("openai");
+
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY || 'openAI_api_key',
+});
 
 
 const sendMessage = async (req, res) => {
@@ -150,7 +155,7 @@ const prompt = `
 - גובה: ${healthData.height} ס"מ
 - גיל: ${healthData.age} שנים
 - מין: ${healthData.gender}
-- אלרגיות: ${healthData.allergies.join(', ')}
+- אלרגיות:${Array.isArray(healthData.allergies) ? healthData.allergies.join(', ') : healthData.allergies || ''}
 
 כל מטרה צריכה לכלול:
 1. כותרת המטרה ("title") – קצרה וברורה
@@ -196,7 +201,8 @@ const prompt = `
 
     res.json({ nutritionGoals, healthData });
   } catch (error) {
-    res.status(500).json(error);
+    res.status(500).json({ error: error.message });
+
   }
 };
 

@@ -17,7 +17,7 @@ const userApiSlice=apiSlice.injectEndpoints({
         }),
       addUser:build.mutation({
           query:(user)=>({
-            url:'/users/register',
+            url:'/auth/register',
             method:'POST',
             body:user
           }),
@@ -25,18 +25,18 @@ const userApiSlice=apiSlice.injectEndpoints({
        }),
       loginUser: build.mutation({
         query: (user) => ({
-          url: '/login',
+          url: 'auth/login',
           method: 'POST',
           body: user,
         }),
       }),
       checkEmail: build.mutation({
-        query: (email) => ({
-          url: '/users/check-email',
-          method: 'POST',
-          body: {email},
-        }),
-      }),
+  query: (email) => ({
+    url: `/auth/check-user?email=${email}`,
+    method: 'GET',
+  }),
+}),
+
       deleteUser: build.mutation({
         query: (userId) => ({
           url: `/users/${userId}`,
@@ -64,5 +64,4 @@ export const {
     useGetUsersQuery,
     useLoginUserMutation,
     useCheckEmailMutation
-    
 }=userApiSlice
