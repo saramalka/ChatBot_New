@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { setToken } from '../slices/authSlice';
 import '../styles/AuthPage.css';
 import {
   useLoginUserMutation,
@@ -20,15 +22,21 @@ const handleChange = (e) => {
   setForm((prev) => ({ ...prev, [name]: value }));
 };
 
-
+  const dispatch = useDispatch();
   const handleLogin = async () => {
     try {
       const res = await loginUser(form).unwrap();
-      console.log('res from login:', res);
-      localStorage.setItem('token', res.token);
-      localStorage.setItem('username', res.username);
+      // console.log('res from login:', res);
+      // localStorage.setItem('token', res.token);
+      // localStorage.setItem('username', res.username);
 
-      localStorage.setItem('userRole', res.role);
+      // localStorage.setItem('userRole', res.role);
+    
+      dispatch(setToken({
+      name: res.username,
+      token: res.token,
+      role: res.role
+    }));
       alert('התחברות בוצעה בהצלחה');
       navigate('/chat');
     } catch (err) {

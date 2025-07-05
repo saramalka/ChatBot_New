@@ -7,12 +7,12 @@ import 'primeflex/primeflex.css';
 import AppRoutes from "./routes";                         
 import { BrowserRouter } from "react-router-dom";
 import Navbar from './chatBot_components/Navbar';
+import { useSelector } from 'react-redux';
 
 
 function App() {
-  const user = JSON.parse(localStorage.getItem("user"));
-const isAdmin = user?.role === "admin";
-
+ const role = useSelector((state) => state.auth.role);
+const isAdmin = role === "admin";
   return (
     <>
     <BrowserRouter >
