@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import  { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { setToken } from '../slices/authSlice';
@@ -53,7 +53,6 @@ const handleChange = (e) => {
     e.preventDefault();
     try {
       const res = await checkEmail(form.email).unwrap();
-      debugger;
       if (res.exists) {
         handleLogin();
       } else {

@@ -29,7 +29,7 @@ const register = async (req, res) => {
     if (!user) {
       return res.status(400).send('fail to register');
     }
-
+console.log('User registered successfully:', user);   
     req.body = { email, password }; 
     return login(req, res);
   } catch (error) {

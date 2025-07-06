@@ -34,7 +34,7 @@ const healthDataSchema = new mongoose.Schema({
   age: Number,
   gender: String,
   allergies: [String],
-  nutritionGoals: [nutritionGoalSchema] // הוספנו כאן
+  nutritionGoals: [nutritionGoalSchema] 
 });
 
 module.exports = mongoose.model('HealthDataUser', healthDataSchema);

@@ -3,7 +3,7 @@ import '../styles/nutritition.css';
 import '../styles/AuthPage.css';
 import ChatComponent from './Chat';
 import {
-  useGetInitialGoalsQuery,
+  useLazyGetInitialGoalsQuery,
   useUpdateNutritionGoalsMutation,
   useSaveHealthDataMutation,
   useGetHealthDataQuery,
@@ -24,13 +24,10 @@ const { refetch } = useGetMessagesQuery();
   const [isLoading, setIsLoading] = useState(false);
   const [showChat, setShowChat] = useState(false);
   const userName = localStorage.getItem('username');
-const { data: fetchedHealthData } = useGetHealthDataQuery();
-  const { data: fetchedGoals, isLoading: goalsLoading } = useGetInitialGoalsQuery();
+  const { data: fetchedHealthData } = useGetHealthDataQuery();
+const [getInitialGoals] = useLazyGetInitialGoalsQuery();
   const [saveHealthData] = useSaveHealthDataMutation();
   const [updateNutritionGoals] = useUpdateNutritionGoalsMutation();
-  const token = localStorage.getItem('token');
-  const headers = { Authorization: `Bearer ${token}` };
-
 
 useEffect(() => {
   if (fetchedHealthData) {
@@ -45,37 +42,33 @@ useEffect(() => {
 }, [fetchedHealthData]);
 
 
-useEffect(() => {
-  if (fetchedGoals && fetchedGoals.nutritionGoals) {
-    const enrichedGoals = fetchedGoals.nutritionGoals.map((goal, index) => ({
-      ...goal,
-      id: goal.id || index.toString() 
-    }));
-    setInitialGoals(enrichedGoals);
-  }
-}, [fetchedGoals]);
+const handleSave = async () => {
+  try {
+    console.log("Saving health data...");
+    await saveHealthData(healthData).unwrap();
+    console.log("Saved health data successfully.");
 
+    await refetch();
 
-  const handleSave = async () => {
-    try {
-      await saveHealthData(healthData).unwrap();
-      await refetch();
-      alert('הנתונים נשמרו בהצלחה');
-    } catch (err) {
-      alert('שגיאה בשמירה');
+    console.log("Fetching initial goals...");
+    const result = await getInitialGoals().unwrap();
+    console.log("Fetched goals:", result);
+
+    if (result && result.nutritionGoals) {
+      const enrichedGoals = result.nutritionGoals.map((goal, index) => ({
+        ...goal,
+        id: goal.id || index.toString()
+      }));
+      setInitialGoals(enrichedGoals);
     }
-  };
 
-  // const changeGoalStatus = async (index, newStatus) => {
-  //   const updatedGoals = [...initialGoals];
-  //   updatedGoals[index].status = newStatus;
-  //   setInitialGoals(updatedGoals);
-  //   try {
-  //     await updateNutritionGoals(updatedGoals).unwrap();
-  //   } catch (err) {
-  //     alert('שגיאה בעדכון סטטוס');
-  //   }
-  // };
+    alert('הנתונים נשמרו בהצלחה');
+  } catch (err) {
+    console.error("שגיאה בטיפול:", err);
+    alert('שגיאה בשמירה');
+  }
+};
+
   const changeGoalStatus = async(goalId, newStatus) => {
   const updatedGoals = initialGoals.map(goal =>
     goal.id === goalId ? { ...goal, status: newStatus } : goal

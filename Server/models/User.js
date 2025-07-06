@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
 
 const nutritionGoalSchema = new mongoose.Schema({
   title: String,
@@ -16,7 +15,7 @@ const userSchema = new mongoose.Schema({
   role:{
     type: String,
     enum: ['admin', 'user'], 
-    default: 'User'
+    default: 'user'
   },
   password: String,
   nutritionGoals: [nutritionGoalSchema],

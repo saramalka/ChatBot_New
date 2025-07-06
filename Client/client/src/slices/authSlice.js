@@ -10,6 +10,7 @@ const authSlice=createSlice({
     },
     reducers:{
         setToken:(state,action)=>{
+            console.log("setToken action payload:", action.payload);
             const {name,token,role}=action.payload
             state.token=token
             state.isLoggedIn=true

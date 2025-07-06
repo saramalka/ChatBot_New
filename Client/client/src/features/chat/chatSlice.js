@@ -19,21 +19,26 @@ export const chatSlice = apiSlice.injectEndpoints({
       invalidatesTags: ['Chat'],
     }),
 
-    getInitialGoals: builder.query({
-      query: () => '/chat/initial',
-      providesTags: ['Goals'],
-    }),
+getInitialGoals: builder.query({
+  query: () => ({
+    url: '/chat/initial',
+    method: 'GET',
+   
+  }),
+  providesTags: ['Goals'],
+  keepUnusedDataFor: 0 
+}),
+
 
     updateNutritionGoals: builder.mutation({
       query: (body) => ({
         url: '/chat/updateNutritionGoals',
         method: 'POST',
         body,
-        headers: {
-          'Content-Type': 'application/json',
-        },
+       
       }),
       invalidatesTags: ['Goals'],
+   keepUnusedDataFor: 0
     }),
 
     saveHealthData: builder.mutation({
@@ -57,7 +62,7 @@ export const chatSlice = apiSlice.injectEndpoints({
 export const {
   useGetMessagesQuery,
   useSendMessageMutation,
-  useGetInitialGoalsQuery,
+  useLazyGetInitialGoalsQuery,
   useUpdateNutritionGoalsMutation,
   useSaveHealthDataMutation,
   useGetHealthDataQuery
