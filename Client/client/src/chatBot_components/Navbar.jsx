@@ -23,7 +23,7 @@ export default function Navbar({ isAdmin }) {
   items.push({ label: 'התנתקות', icon: 'pi pi-sign-out', command: () => {
     localStorage.clear();
     dispatch(removeToken());
-    navigate('/auth');
+    navigate('/');
   }});
 
   const start = <img alt="logo" src="/logo.png" height="40" className="mr-2" />;

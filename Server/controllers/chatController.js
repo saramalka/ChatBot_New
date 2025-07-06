@@ -1,4 +1,4 @@
-const Chat = require('../models/ChatMessage');
+const ChatMessage = require('../models/ChatMessage');
 const ChatNode = require('../models/HealthDataUser');
 const mongoose=require("mongoose")
 const HealthDataUser = require('../models/HealthDataUser');
@@ -102,8 +102,8 @@ const returnAutoMessage = async (req, res) => {
 const updateNutritionGoals= async (req, res) => {
   try {
   
-    const healthData = await HealthDataUser.findOne({ userId: req.user.userId });
-
+    const healthData = await HealthDataUser.findOne({ userId: req.user.id });
+    console.log("healthData" ,req.user.id)
     if (!healthData) {
       return res.status(404).json({ message: 'לא נמצאו נתוני בריאות למשתמש זה' });
     }
@@ -120,33 +120,18 @@ const updateNutritionGoals= async (req, res) => {
 
 const initial=async (req, res) => {
   try {
-    const healthData = await HealthDataUser.findOne({ userId: req.user.userId });
+   
+
+    const healthData = await HealthDataUser.findOne({ userId: req.user.id });
 
     if (!healthData) {
       return res.status(404).json({ message: 'לא נמצאו נתוני בריאות למשתמש זה' });
     }
- //console.log("healthData" ,healthData)
-  //  console.log("healthData.initialNutritionGoals.length" ,healthData.nutritionGoals.length)
-    // ✅ אם כבר קיימות מטרות – מחזיר אותן בלי לשלוח שוב ל-GPT
     if (healthData.nutritionGoals && healthData.nutritionGoals.length > 0) {
-    //  console.log("yessssssss")
+      console.log("yessssssss")
       return res.json({ nutritionGoals: healthData.nutritionGoals, healthData });
 
     }
-
-    // המשך לקרוא ל-GPT אם אין מטרות שמורות
-//     const prompt = `
-// אתה תזונאי מומחה. אנא ספק 4 מטרות תזונתיות חייב שזה יהיה בנושא תזונה בריאה כושר וכד בשפה העברית מותאמות אישית עבור משתמש עם הנתונים הבאים:
-// משקל: ${healthData.weight} ק"ג,
-// גובה: ${healthData.height} ס"מ,
-// גיל: ${healthData.age} שנים,
-// מין: ${healthData.gender},
-// אלרגיות: ${healthData.allergies.join(', ')}.
-
-// אנא הצג את המטרות בפורמט JSON בלבד, במערך של אובייקטים, כאשר כל אובייקט כולל את המאפיינים:
-// "title", "description", "targetCalories", "targetCarbs", "targetProtein", "targetFat".
-// `;
-
 
 const prompt = `
 אתה תזונאי מומחה ואיש כושר מוסמך. נא ליצור 4 מטרות מותאמות אישית עבור משתמש עם הנתונים הבאים:
@@ -187,11 +172,12 @@ const prompt = `
     } catch (e) {
       return res.status(500).json({ error: 'שגיאה בפרסינג JSON מה-OpenAI' });
     }
-
-    // console.log("nutritionGoals" ,nutritionGoals)
-   nutritionGoals = nutritionGoals.map(goal => ({
+nutritionGoals = nutritionGoals.map((goal, index) => ({
   ...goal,
-  status: 'notStarted' }));
+  status: 'notStarted' ,
+  id: index.toString()
+  }));
+
 
     console.log("nutritionGoals" ,nutritionGoals)
     healthData.nutritionGoals = nutritionGoals;
@@ -210,10 +196,9 @@ const healthData=async(req, res) =>{
   try {
     const { weight, height, age, gender, allergies } = req.body;
 
-    const existing = await HealthDataUser.findOne({ userId: req.user.userId });
+    const existing = await HealthDataUser.findOne({ userId: req.user.id });
     
     if (existing) {
-      // עדכון אם קיים
       existing.weight = weight;
       existing.height = height;
       existing.age = age;
@@ -222,11 +207,10 @@ const healthData=async(req, res) =>{
       await existing.save();
       return res.json({ message: 'עודכן בהצלחה' });
     }
-console.log("userID" ,req.user.userId)
+console.log("userID" ,req.user.id)
 console.log(req.body)
-    // חדש אם לא קיים
     const healthData = new HealthDataUser({
-      userId: req.user.userId,
+      userId: req.user.id,
       weight,
       height,
       age,
@@ -243,7 +227,7 @@ console.log(req.body)
 }
 const healthDataGet =async (req, res) => {
   try {
-    const data = await HealthDataUser.findOne({ userId: req.user.userId });
+    const data = await HealthDataUser.findOne({ userId: req.user.id });
     if (!data) return res.status(404).json({ message: 'לא נמצאו נתונים' });
     res.json(data);
   } catch (error) {
@@ -253,7 +237,7 @@ const healthDataGet =async (req, res) => {
 
 const all= async (req, res) => {
   try {
-    const messages = await ChatMessage.find({ userId: req.user.userId });
+    const messages = await ChatMessage.find({ userId: req.user.id });
     res.json(messages);
   } catch {
     res.status(500).json({ error: 'שגיאה בהבאת ההודעות' });
@@ -269,9 +253,10 @@ const createMessage= async (req, res) => {
     });
 
     const botReply = chatCompletion.choices[0].message.content;
+    console.log('user', req.user);
 
     const newChat = new ChatMessage({
-      userId: req.user.userId,
+      userId: req.user.id,
       userMessage: message,
       botReply
     });

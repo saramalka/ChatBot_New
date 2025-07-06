@@ -36,3 +36,10 @@
     transform: rotate(360deg);
   }
 }
+html, body {
+     font-family: Arial, sans-serif; 
+     direction:rtl;
+      scroll-behavior: auto; 
+      overflow-anchor: none; 
+      background: linear-gradient(to right,#a8edea,#fed6e3);
+     }

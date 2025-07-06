@@ -26,22 +26,16 @@ const handleChange = (e) => {
   const handleLogin = async () => {
     try {
       const res = await loginUser(form).unwrap();
-      // console.log('res from login:', res);
-      // localStorage.setItem('token', res.token);
-      // localStorage.setItem('username', res.username);
-
-      // localStorage.setItem('userRole', res.role);
-    
       dispatch(setToken({
       name: res.username,
       token: res.token,
       role: res.role
     }));
-      alert('התחברות בוצעה בהצלחה');
+      console.log('התחברות בוצעה בהצלחה');
       navigate('/chat');
     } catch (err) {
       console.error(err);
-      alert('שגיאה בהתחברות');
+      console.log('שגיאה בהתחברות');
     }
   };
 
@@ -51,7 +45,7 @@ const handleChange = (e) => {
       handleLogin();
     } catch (err) {
       console.error(err);
-      alert('שגיאה בהרשמה');
+      console.log('שגיאה בהרשמה');
     }
   };
 
@@ -67,7 +61,7 @@ const handleChange = (e) => {
       }
     } catch (err) {
       console.error(err);
-      alert('שגיאה בבדיקת משתמש');
+      console.log('שגיאה בבדיקת משתמש');
     }
   };
 

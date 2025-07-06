@@ -7,10 +7,12 @@ import {
   useUpdateNutritionGoalsMutation,
   useSaveHealthDataMutation,
   useGetHealthDataQuery,
+  useGetMessagesQuery
 } from '../features/chat/chatSlice';
 
 
 export default function Component() {
+const { refetch } = useGetMessagesQuery();
   const [healthData, setHealthData] = useState({
     weight: '',
     height: '',
@@ -33,41 +35,60 @@ const { data: fetchedHealthData } = useGetHealthDataQuery();
 useEffect(() => {
   if (fetchedHealthData) {
     setHealthData({
-      weight: fetchedHealthData.weight || '',
-      height: fetchedHealthData.height || '',
-      age: fetchedHealthData.age || '',
-      gender: fetchedHealthData.gender || '',
-      allergies: fetchedHealthData.allergies || ''
+      weight: fetchedHealthData.weight ?? '',
+      height: fetchedHealthData.height ?? '',
+      age: fetchedHealthData.age ?? '',
+      gender: fetchedHealthData.gender ?? '',
+      allergies: fetchedHealthData.allergies ?? ''
     });
   }
 }, [fetchedHealthData]);
 
 
-  useEffect(() => {
-    if (fetchedGoals && fetchedGoals.nutritionGoals) {
-      setInitialGoals(fetchedGoals.nutritionGoals);
-    }
-  }, [fetchedGoals]);
+useEffect(() => {
+  if (fetchedGoals && fetchedGoals.nutritionGoals) {
+    const enrichedGoals = fetchedGoals.nutritionGoals.map((goal, index) => ({
+      ...goal,
+      id: goal.id || index.toString() 
+    }));
+    setInitialGoals(enrichedGoals);
+  }
+}, [fetchedGoals]);
+
 
   const handleSave = async () => {
     try {
       await saveHealthData(healthData).unwrap();
+      await refetch();
       alert('הנתונים נשמרו בהצלחה');
     } catch (err) {
       alert('שגיאה בשמירה');
     }
   };
 
-  const changeGoalStatus = async (index, newStatus) => {
-    const updatedGoals = [...initialGoals];
-    updatedGoals[index].status = newStatus;
-    setInitialGoals(updatedGoals);
-    try {
-      await updateNutritionGoals(updatedGoals).unwrap();
-    } catch (err) {
-      alert('שגיאה בעדכון סטטוס');
-    }
-  };
+  // const changeGoalStatus = async (index, newStatus) => {
+  //   const updatedGoals = [...initialGoals];
+  //   updatedGoals[index].status = newStatus;
+  //   setInitialGoals(updatedGoals);
+  //   try {
+  //     await updateNutritionGoals(updatedGoals).unwrap();
+  //   } catch (err) {
+  //     alert('שגיאה בעדכון סטטוס');
+  //   }
+  // };
+  const changeGoalStatus = async(goalId, newStatus) => {
+  const updatedGoals = initialGoals.map(goal =>
+    goal.id === goalId ? { ...goal, status: newStatus } : goal
+  );
+  console.log('Updated Goals:', updatedGoals);
+  setInitialGoals(updatedGoals);
+  try {
+    await updateNutritionGoals(updatedGoals).unwrap();
+  } catch (err) {
+    alert('שגיאה בעדכון סטטוס');
+  }
+};
+
 
   const getStatusLabel = (status) => {
     switch (status) {
@@ -132,7 +153,7 @@ useEffect(() => {
                           <button
                             key={status}
                             className={`${status} ${goal.status === status ? 'active' : ''}`}
-                            onClick={() => changeGoalStatus(i, status)}>
+                            onClick={() => changeGoalStatus(goal.id, status)}>
                             {getStatusLabel(status)}
                           </button>
                         ))}
@@ -152,11 +173,9 @@ useEffect(() => {
         {showChat && <span className="close-text">× סגור</span>}
       </button>
 
-      {showChat && <div className="chat-box"><YourChatComponent /></div>}
+      {showChat && <div className="chat-box"><ChatComponent /></div>}
     </div>
   );
 }
 
-function YourChatComponent() {
-  return <ChatComponent />;
-}
+

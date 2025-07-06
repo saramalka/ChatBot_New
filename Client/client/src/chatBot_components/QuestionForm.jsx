@@ -19,7 +19,6 @@ const QuestionForm = () => {
 
   useEffect(() => {
     if (error || successMessage) {
-      // אחרי הצגת הודעה, ננקה אותה אחרי 3 שניות
       const timer = setTimeout(() => {
         dispatch(clearMessages());
       }, 3000);
@@ -51,7 +50,6 @@ const QuestionForm = () => {
 
     dispatch(addQuestion(questionData));
 
-    // ננקה שדות
     setQuestionId('');
     setQuestionText('');
     setReply('');

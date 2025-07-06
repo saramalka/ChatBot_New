@@ -20,7 +20,7 @@ const register = async (req, res) => {
     const userRole = role === "admin" ? "admin" : "user";
 
     const user = await User.create({
-      username, // 👈 חשוב: משתמש ב־username ולא name
+      username,
       email,
       password: hash,
       role: userRole
@@ -30,8 +30,8 @@ const register = async (req, res) => {
       return res.status(400).send('fail to register');
     }
 
-    console.log('📦 User from DB registr:', user);
-    return res.json({ msg: 'User registered' });
+    req.body = { email, password }; 
+    return login(req, res);
   } catch (error) {
     console.error('Register error:', error);
     return res.status(500).send('Server error during registration');
@@ -49,18 +49,18 @@ const login = async (req, res) => {
     return res.status(404).json({ msg: 'User not found' });
   }
 
-  console.log('📦 User from DB login:', user);
+  console.log(' User from DB login:', user);
 
   const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) {
-    console.log('❌ Invalid password');
+    console.log('Invalid password');
     return res.status(401).json({ msg: 'Invalid credentials' });
   }
 
   const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET);
 
-  console.log('🔐 Login Success');
-  res.json({ token, username: user.username, role: user.role }); // 👈 username נכון
+  console.log(' Login Success');
+  res.json({ token, username: user.username, role: user.role });
 };
 
 const updateUser = async (req, res) => {
