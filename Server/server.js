@@ -14,8 +14,8 @@ connectDB()
 
 app.use(cors(corsOptions));
 
-
 app.use(express.json());
+app.use(express.static('public'));
 app.use('/api/users', userRoutes);
 app.use('/api/auth', userRoutes);
 app.use('/api/chat', chatRoutes);
@@ -23,12 +23,17 @@ app.use('/api/chat', chatRoutes);
 app.get('/', (req, res) => {
   res.send('🍎 ברוכים הבאים לאתר תזונה בריאה!');
 });
-mongoose.connection.once('open',()=>{
-    console.log('Connected to MongoDB')
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`))
-})
+const startServer = async () => {
+  try {
+    await connectDB(); 
+    mongoose.connection.once('open', () => {
+      console.log('Connected to MongoDB', process.env.MONGO_URI);
+      app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+    });
+  } catch (err) {
+    console.error('Failed to start server:', err);
+  }
+};
 
-mongoose.connection.on('error', err => {
-    console.log(err)
-})
+startServer();
 

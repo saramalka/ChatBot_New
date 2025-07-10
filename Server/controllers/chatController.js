@@ -1,6 +1,6 @@
 const ChatMessage = require('../models/ChatMessage');
-const ChatNode = require('../models/HealthDataUser');
-const mongoose=require("mongoose")
+// const ChatNode = require('../models/HealthDataUser');
+// const mongoose=require("mongoose")
 const HealthDataUser = require('../models/HealthDataUser');
 const { OpenAI } = require("openai");
 
@@ -151,9 +151,9 @@ const prompt = `
 5. יעד יומי לחלבון בגרם ("targetProtein")
 6. יעד יומי לשומן בגרם ("targetFat")
 
-ההצעות חייבות להיות מדויקות, מבוססות עקרונות תזונה וכושר, לא מומצאות, ולא לכלול מידע שאינו מתאים לנתוני המשתמש.
-
-החזר את התוצאה בפורמט JSON בלבד – מערך של אובייקטים עם המאפיינים שצוינו מעלה.
+ובשפה עברית ההצעות חייבות להיות מדויקות, מבוססות עקרונות תזונה וכושר, לא מומצאות, ולא לכלול מידע שאינו מתאים לנתוני המשתמש.
+החזר אך ורק JSON תקני – מערך של אובייקטים עם השדות שצוינו. 
+אל תוסיף הסברים, תגיות markdown או טקסט נוסף.
 `;
 
     const completion = await openai.chat.completions.create({
@@ -162,13 +162,17 @@ const prompt = `
     });
 
     const responseText = completion.choices[0].message.content;
-
+let cleaned = responseText.trim();
+if (cleaned.startsWith('```json') || cleaned.startsWith('```')) {
+  cleaned = cleaned.replace(/```json|```/g, '').trim();
+}
     let nutritionGoals;
     try {
-      nutritionGoals = JSON.parse(responseText);
-    } catch (e) {
-      return res.status(500).json({ error: 'שגיאה בפרסינג JSON מה-OpenAI' });
-    }
+      nutritionGoals = JSON.parse(cleaned);
+    } catch (jsonErr) {
+    console.error("OpenAI החזיר תגובה לא חוקית:", cleaned);
+    return res.status(500).json({ error: 'התגובה מה-OpenAI לא בפורמט JSON תקני' });
+  }
     nutritionGoals = nutritionGoals.map((goal, index) => ({
       ...goal,
       status: 'notStarted' ,

@@ -26,7 +26,7 @@ export default function Navbar({ isAdmin }) {
     navigate('/');
   }});
 
-  const start = <img alt="logo" src="../assets/bot.svg" height="40" className="mr-2" />;
+  const start = <img alt="logo" src="http://localhost:2200/logo.png" height="40" className="mr-2" />;
 
   return <Menubar model={items} start={start} />;
 }
