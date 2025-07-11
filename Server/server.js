@@ -20,9 +20,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/auth', userRoutes);
 app.use('/api/chat', chatRoutes);
 //app.use('/api/replay', answerRoutes);
-app.get('/', (req, res) => {
-  res.send('🍎 ברוכים הבאים לאתר תזונה בריאה!');
-});
+
 const startServer = async () => {
   try {
     await connectDB(); 

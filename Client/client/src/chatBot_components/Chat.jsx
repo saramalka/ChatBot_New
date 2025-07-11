@@ -44,7 +44,7 @@ const ChatComponent = () => {
           onChange={(e) => setNewMessage(e.target.value)}
           placeholder="כתוב הודעה..."
         />
-        <button onClick={handleSend}>שלח</button>
+        <button onClick={handleSend} disabled={isBotTyping}> שלח</button>
       </div>
     </div>
   );

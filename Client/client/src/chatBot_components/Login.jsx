@@ -11,6 +11,7 @@ import {
 
 export default function Login() {
   const [form, setForm] = useState({ username: '', email: '', password: '' });
+  const [errorMsg, setErrorMsg] = useState('')
   const navigate = useNavigate();
 
   const [loginUser] = useLoginUserMutation();
@@ -19,6 +20,7 @@ export default function Login() {
 
 const handleChange = (e) => {
   const { name, value } = e.target;
+  setErrorMsg('');
   setForm((prev) => ({ ...prev, [name]: value }));
 };
 
@@ -36,6 +38,7 @@ const handleChange = (e) => {
     } catch (err) {
       console.error(err);
       console.log('שגיאה בהתחברות');
+      setErrorMsg('שם המשתמש או הסיסמה אינם נכונים');
     }
   };
 
@@ -46,10 +49,12 @@ const handleChange = (e) => {
     } catch (err) {
       console.error(err);
       console.log('שגיאה בהרשמה');
+      setErrorMsg('ההרשמה נכשלה. נא לנסות שוב.');
     }
   };
 
   const handleSubmit = async (e) => {
+    setErrorMsg('');
     e.preventDefault();
     try {
       const res = await checkEmail(form.email).unwrap();
@@ -61,11 +66,13 @@ const handleChange = (e) => {
     } catch (err) {
       console.error(err);
       console.log('שגיאה בבדיקת משתמש');
+      setErrorMsg('שגיאה בבדיקת המשתמש. נא לנסות שוב.');
     }
   };
 
   return (
     <div className="login-container">
+      <div className="title"> ברוכים הבאים לאתר תזונה בריאה!</div>
       <h2>התחברות / הרשמה</h2>
       <form onSubmit={handleSubmit}>
         <label htmlFor="username">שם מלא:</label>
@@ -102,6 +109,7 @@ const handleChange = (e) => {
         />
 
         <button type="submit">כניסה / הרשמה</button>
+        {errorMsg && <div className="error-message">{errorMsg}</div>}
       </form>
     </div>
   );

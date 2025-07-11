@@ -11,7 +11,12 @@ const apiSlice=createApi({
                 headers.set("authorization", `Bearer ${token}`);
               }
               return headers;
-        }    
+        },
+    fetchFn: (input, init) => {
+      init = init || {};
+      init.cache = 'no-cache';
+      return fetch(input, init);
+    }    
     }),
     tagTypes: ['User', 'QuickReplies', 'Chat', 'Goals', 'HealthData'],
 

@@ -25,8 +25,8 @@ export default function Navbar() {
   if (isAdmin) {
     items.push(
       { label: 'משתמשים', icon: 'pi pi-users', command: () => navigate('/admin/users') },
-      { label: 'הודעות', icon: 'pi pi-envelope', command: () => navigate('/admin/messages') },
-      { label: 'תשובות קבועות', icon: 'pi pi-envelope', command: () => navigate('/admin/replies') }
+      // { label: 'הודעות', icon: 'pi pi-envelope', command: () => navigate('/admin/messages') },
+      // { label: 'תשובות קבועות', icon: 'pi pi-envelope', command: () => navigate('/admin/replies') }
     );
   }
 

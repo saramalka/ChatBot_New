@@ -60,3 +60,8 @@
 .chat-input button:hover {
   background-color: #27ae60;
 }
+.chat-input button:disabled {
+  background-color: #95ac95; 
+  color: #888;              
+  cursor: not-allowed;
+}
