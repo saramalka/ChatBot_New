@@ -3,6 +3,7 @@ import { Menubar } from 'primereact/menubar';
 import { useNavigate } from 'react-router-dom';
 import { removeToken } from '../slices/authSlice';
 import { useDispatch ,useSelector} from 'react-redux';
+import '../styles/navbar.css';
 
 export default function Navbar() {
   const navigate = useNavigate();
@@ -12,7 +13,13 @@ export default function Navbar() {
   const isAdmin = role === 'admin';
 
   const items = [
-    { label: 'צ׳אט', icon: 'pi pi-comments', command: () => navigate('/chat') },
+    { label: 'צ׳אט', icon: 'pi pi-comments', command: () =>  {
+      if (isLoggedIn) {
+        navigate('/chat');
+      } else {
+        navigate('/');
+      }
+    } },
   ];
 
   if (isAdmin) {
@@ -42,7 +49,7 @@ export default function Navbar() {
 );
 
 
-  const start = <img alt="logo" src="http://localhost:2200/logo.png" height="40" className="mr-2" />;
+  const start = <img alt="logo" src="http://localhost:2200/logo2.png" height="40" className="mr-2" />;
 
-  return <Menubar model={items} start={start} />;
+  return <Menubar className='menubar' model={items} start={start} />;
 }

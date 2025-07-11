@@ -47,7 +47,7 @@
   padding: 12px;
   border-radius: 8px;
   border: none;
-  background-color: #1976d2;
+  background-color: #2ecc71;
   color: white;
   font-weight: bold;
   font-size: 16px;
@@ -56,5 +56,5 @@
 }
 
 .login-container button:hover {
-  background-color: #125ea7;
+  background-color: #27ae60;
 }
