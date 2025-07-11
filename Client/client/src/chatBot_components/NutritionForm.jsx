@@ -42,7 +42,7 @@ export default function NutritionForm({ healthData, setHealthData, handleSave })
             onChange={e => setHealthData({ ...healthData, allergies: e.target.value })}
           />
         </label>
-        <button type="submit">שמור</button>
+        <button type="submit">לקבלת הצעת תזונה</button>
       </form>
     </div>
   );

@@ -2,14 +2,17 @@ import React from 'react';
 import { Menubar } from 'primereact/menubar';
 import { useNavigate } from 'react-router-dom';
 import { removeToken } from '../slices/authSlice';
-import { useDispatch } from 'react-redux';
+import { useDispatch ,useSelector} from 'react-redux';
 
-export default function Navbar({ isAdmin }) {
+export default function Navbar() {
   const navigate = useNavigate();
   const dispatch=useDispatch()
+  const role = useSelector(state => state.auth.role);
+  const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
+  const isAdmin = role === 'admin';
 
   const items = [
-    { label: 'צ׳אט', icon: 'pi pi-comments', command: () => navigate('/') },
+    { label: 'צ׳אט', icon: 'pi pi-comments', command: () => navigate('/chat') },
   ];
 
   if (isAdmin) {
@@ -20,11 +23,24 @@ export default function Navbar({ isAdmin }) {
     );
   }
 
-  items.push({ label: 'התנתקות', icon: 'pi pi-sign-out', command: () => {
-    localStorage.clear();
-    dispatch(removeToken());
-    navigate('/');
-  }});
+ items.push(
+  isLoggedIn
+    ? {
+        label: 'התנתקות',
+        icon: 'pi pi-sign-out',
+        command: () => {
+          localStorage.clear();
+          dispatch(removeToken());
+          navigate('/');
+        }
+      }
+    : {
+        label: 'התחברות',
+        icon: 'pi pi-sign-in',
+        command: () => navigate('/')
+      }
+);
+
 
   const start = <img alt="logo" src="http://localhost:2200/logo.png" height="40" className="mr-2" />;
 

@@ -27,7 +27,7 @@ const authSlice=createSlice({
             state.token=""
             state.isLoggedIn=false
             state.name=""
-    
+            state.role = "";
             localStorage.removeItem("token")
             localStorage.removeItem("username")
             localStorage.removeItem("userRole");

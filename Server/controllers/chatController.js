@@ -129,7 +129,7 @@ console.log("USER FROM REQUEST:", req.user);
       return res.status(404).json({ message: 'לא נמצאו נתוני בריאות למשתמש זה' });
     }
     if (healthData.nutritionGoals && healthData.nutritionGoals.length > 0) {
-      console.log("yessssssss")
+      console.log("healthData",healthData)
       return res.json({ nutritionGoals: healthData.nutritionGoals, healthData });
 
     }
@@ -227,6 +227,8 @@ console.log(req.body)
 const healthDataGet =async (req, res) => {
   try {
     const data = await HealthDataUser.findOne({ userId: req.user.id });
+    console.log("=== CURRENT USER ID:", req.user.id);
+
     if (!data) return res.status(404).json({ message: 'לא נמצאו נתונים' });
     res.json(data);
   } catch (error) {
@@ -250,6 +252,7 @@ const createMessage= async (req, res) => {
   try {
     const { message } = req.body;
     const userHealthData = await getUserHealthData(req.user.id);
+    const nutritionGoals = userHealthData?.nutritionGoals || [];
 
     let healthContext = '';
     if (userHealthData) {
@@ -263,11 +266,25 @@ const createMessage= async (req, res) => {
       `;
     }
 
+    let goalsContext = '';
+if (nutritionGoals.length > 0) {
+  goalsContext = 'מטרות תזונה שהוגדרו:\n' + nutritionGoals.map((goal, index) => (
+    `מטרה ${index + 1}:\n` +
+    `- כותרת: ${goal.title}\n` +
+    `- תיאור: ${goal.description}\n` +
+    `- קלוריות יעד: ${goal.targetCalories}\n` +
+    `- פחמימות: ${goal.targetCarbs} גרם\n` +
+    `- חלבון: ${goal.targetProtein} גרם\n` +
+    `- שומן: ${goal.targetFat} גרם\n`
+  )).join('\n\n');
+}
+
+
     const chatCompletion = await openai.chat.completions.create({
       model: "gpt-3.5-turbo",
       messages: [
         { role: "system", content: "אתה תזונאי מוסמך. תן ייעוץ בריאותי לפי המידע האישי של המשתמש." },
-        { role: "user", content: `${healthContext}\n\nשאלה: ${message}` }
+        { role: "user", content: `${healthContext}\n\n${goalsContext}\n\nשאלה: ${message}` }
       ],
     });
 

@@ -23,7 +23,8 @@ export default function Component() {
   const [isLoading, setIsLoading] = useState(false);
   const [showChat, setShowChat] = useState(false);
   const userName = localStorage.getItem('username');
-  const { data: fetchedHealthData } = useGetHealthDataQuery();
+  const token=localStorage.getItem('token');
+  const { data: fetchedHealthData } = useGetHealthDataQuery(token);
   const [getInitialGoals] = useLazyGetInitialGoalsQuery();
   const [saveHealthData] = useSaveHealthDataMutation();
   const [updateNutritionGoals] = useUpdateNutritionGoalsMutation();
@@ -38,10 +39,15 @@ export default function Component() {
         allergies: fetchedHealthData.allergies ?? ''
       });
     }
+    console.log("Saving health data:", healthData);
+   console.log("USER FROM TOKEN:", localStorage.getItem('token'));
+
+      console.log("fetchedHealthData:", fetchedHealthData);
   }, [fetchedHealthData]);
 
   const handleSave = async () => {
     try {
+      
       await saveHealthData(healthData).unwrap();
       await refetch();
       setIsLoading(true);
@@ -69,7 +75,7 @@ export default function Component() {
     try {
       await updateNutritionGoals(updatedGoals).unwrap();
     } catch (err) {
-      alert('שגיאה בשינוי סטטוס מטרה');
+      alert('err changeGoalStatus');
     }
   };
 
