@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Card } from 'primereact/card';
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
-import { Dropdown } from 'primereact/dropdown';
 import { DataTable } from 'primereact/datatable';
-import { ConfirmDialog } from 'primereact/confirmdialog';
-import { confirmDialog } from 'primereact/confirmdialog';
 import { Column } from 'primereact/column';
+import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
+import { Toast } from 'primereact/toast';
+import UserDetails from './UserDetails';
 import {
   useGetUsersQuery,
   useAddUserMutation,
@@ -18,27 +18,26 @@ import {
 export default function UsersPage() {
   const { data = [], refetch } = useGetUsersQuery();
   const [addUser] = useAddUserMutation();
-  const [updateUser] =  useEditUserMutation();
+  const [updateUser] = useEditUserMutation();
   const [deleteUser] = useDeleteUserMutation();
-  const [originalUsers, setOriginalUsers] = useState([]);
+
   const [searchTerm, setSearchTerm] = useState('');
   const [filtered, setFiltered] = useState([]);
   const [dialogVisible, setDialogVisible] = useState(false);
   const [editUser, setEditUser] = useState(null);
   const [form, setForm] = useState({ username: '', email: '', role: 'user', password: '' });
 
- 
+  const toast = useRef(null);
+
   useEffect(() => {
     setFiltered(
       data.filter((u) =>
-        [u.username, u.email, u.role]
-          .some((val) =>
-            val?.toLowerCase().includes(searchTerm.toLowerCase())
-          )
+        [u.username, u.email, u.role].some((val) =>
+          val?.toLowerCase().includes(searchTerm.toLowerCase())
+        )
       )
     );
   }, [searchTerm, data]);
-  
 
   const openNew = () => {
     setEditUser(null);
@@ -46,19 +45,7 @@ export default function UsersPage() {
     setDialogVisible(true);
   };
 
-  const handleSave = async () => {
-    if (editUser) {
-      await updateUser({ ...editUser, ...form })
-    } else {
-      await addUser(form)
-    }
-    setDialogVisible(false)
-    await refetch()
-    
-  };
-  
-
-  const handleDelete = (user) => {
+    const handleDelete = (user) => {
     confirmDialog({
       message: 'האם אתה בטוח שברצונך למחוק את המשתמש?',
       header: 'אישור מחיקה',
@@ -73,19 +60,46 @@ export default function UsersPage() {
       },
     });
   };
-  
 
-  const roles = [
-    { label: 'admin', value: 'admin' },
-    { label: 'user', value: 'user' }
-  ];
+
+  const handleSave = async () => {
+  if (!form.username || !form.email || (!editUser && !form.password)) {
+    toast.current.show({
+      severity: 'warn',
+      summary: 'שגיאה',
+      detail: 'נא למלא את כל השדות הנדרשים',
+      life: 3000,
+    });
+    return;
+  }
+
+  try {
+    if (editUser) {
+      await updateUser({ ...editUser, ...form }).unwrap();
+      toast.current.show({ severity: 'success', summary: 'עודכן', detail: 'המשתמש עודכן בהצלחה' });
+    } else {
+      await addUser(form).unwrap();
+      toast.current.show({ severity: 'success', summary: 'נוסף', detail: 'משתמש חדש נוסף' });
+    }
+
+    setDialogVisible(false);
+    await refetch();
+  } catch (err) {
+    toast.current.show({
+      severity: 'error',
+      summary: 'שגיאה',
+      detail: err?.data?.message || 'קרתה שגיאה',
+    });
+  }
+};
+
 
   return (
     <div className="p-4">
+      <Toast ref={toast} />
       <Card title="ניהול משתמשים">
-      <ConfirmDialog />
+        <ConfirmDialog />
         <div className="flex justify-content-between mb-3">
-
           <InputText
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -96,7 +110,7 @@ export default function UsersPage() {
         </div>
 
         <DataTable value={filtered} paginator rows={10} dataKey="_id">
-         <Column field="username" header="שם משתמש" sortable />
+          <Column field="username" header="שם משתמש" sortable />
           <Column field="email" header="אימייל" sortable />
           <Column field="role" header="תפקיד" sortable />
           <Column
@@ -133,33 +147,7 @@ export default function UsersPage() {
           </div>
         }
       >
-        <div className="p-fluid">
-          <label>שם משתמש</label>
-          <InputText
-            value={form.username}
-            onChange={(e) => setForm({ ...form, username: e.target.value })}
-          />
-
-          <label>אימייל</label>
-          <InputText
-            value={form.email}
-            onChange={(e) => setForm({ ...form, email: e.target.value })}
-          />
-
-          <label>סיסמה</label>
-          <InputText
-            type="password"
-            value={form.password}
-            onChange={(e) => setForm({ ...form, password: e.target.value })}
-          />
-
-          <label>תפקיד</label>
-          <Dropdown
-            value={form.role}
-            options={roles}
-            onChange={(e) => setForm({ ...form, role: e.value })}
-          />
-        </div>
+        <UserDetails form={form} setForm={setForm} handleSave={handleSave} />
       </Dialog>
     </div>
   );
