@@ -1,103 +1,10 @@
 const ChatMessage = require('../models/ChatMessage');
-// const ChatNode = require('../models/HealthDataUser');
-// const mongoose=require("mongoose")
 const HealthDataUser = require('../models/HealthDataUser');
 const { OpenAI } = require("openai");
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY || 'openAI_api_key',
 });
-
-
-// /const sendMessage = async (req, res) => {
-//   try {
-//     const { message, chatNodeId } = req.body;
-
-//     if (!message) {
-//       const firstChatNode = await ChatNode.findOne({ answer: null });
-//       if (!firstChatNode) {
-//         return res.json({ reply: 'לא נמצאה שאלה ראשונה' });
-//       }
-
-//       return res.json({
-//         text: firstChatNode.text,
-//         options: firstChatNode.options,
-//         chatNodeId: firstChatNode._id
-//       });
-//     }
-
-//     const currentChatNode = await ChatNode.findById(chatNodeId);
-//     if (!currentChatNode) {
-//       return res.status(404).json({ reply: 'שאלה לא נמצאה' });
-//     }
-
-//     const selectedOption = currentChatNode.options.find(opt => opt.text === message);
-//     if (!selectedOption) {
-//       return res.status(400).json({ reply: 'לא הבנתי את הבחירה שלך' });
-//     }
-
-//     const nextChatNode = await ChatNode.findById(selectedOption.nextChatNodeId);
-//     if (!nextChatNode) {
-//       return res.status(404).json({ reply: 'לא נמצאה שאלה להמשיך אליה' });
-//     }
-
-//     return res.json({
-//       text: nextChatNode.text,
-//       options: nextChatNode.options,
-//       chatNodeId: nextChatNode._id
-//     });
-//   } catch (err) {
-//     console.error('שגיאה בשרת:', err.message);
-//     return res.status(500).json({ reply: 'אירעה שגיאה בשרת' });
-//   }
-// };
-  
-// const saveAndReply = async ({ req, res, message, reply }) => {
-//   try {
-//     await Chat.findOneAndUpdate(
-//       { userId: req.user._id },
-//       {
-//         $push: {
-//           messages: [
-//             {
-//               role: 'user',
-//               content: message,
-//               timestamp: new Date()
-//             },
-//             {
-//               role: 'bot',
-//               content: reply,
-//               timestamp: new Date()
-//             }
-//           ]
-//         }
-//       },
-//       { upsert: true, new: true }
-//     );
-
-//     return res.json({ reply });
-//   } catch (err) {
-//     console.error('שגיאה בשמירת ההודעות למסד:', err);
-//     return res.status(500).json({ reply: 'שגיאה בשמירת השיחה למסד' });
-//   }
-// };
-
-// const returnMessage = async (req, res) => {
-//   const chat = await Chat.findOne({ userId: req.user.id });
-//   res.json(chat?.messages || []);
-// };
-
-// const returnAutoMessage = async (req, res) => {
-//   const { content, role } = req.body;
-//   const userMessage = new Message({ content, role });
-//   await userMessage.save();
-
-//   const botContent = `הבוט ענה: קיבלתי "${content}"`;
-//   const botMessage = new Message({ content: botContent, role: 'bot' });
-//   await botMessage.save();
-
-//   res.status(201).json({ userMessage, botMessage });
-// }; 
 
 const updateNutritionGoals= async (req, res) => {
   try {
@@ -129,7 +36,7 @@ console.log("USER FROM REQUEST:", req.user);
       return res.status(404).json({ message: 'לא נמצאו נתוני בריאות למשתמש זה' });
     }
     if (healthData.nutritionGoals && healthData.nutritionGoals.length > 0) {
-      console.log("healthData",healthData)
+      //console.log("healthData",healthData)
       return res.json({ nutritionGoals: healthData.nutritionGoals, healthData });
 
     }
@@ -306,6 +213,4 @@ if (nutritionGoals.length > 0) {
 
 
 module.exports= {createMessage,
-  initial,updateNutritionGoals,healthData,healthDataGet
-//  ,sendMessage ,returnMessage,returnAutoMessage
-,all};  
+  initial,updateNutritionGoals,healthData,healthDataGet,all};  

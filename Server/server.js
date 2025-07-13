@@ -19,7 +19,6 @@ app.use(express.static('public'));
 app.use('/api/users', userRoutes);
 app.use('/api/auth', userRoutes);
 app.use('/api/chat', chatRoutes);
-//app.use('/api/replay', answerRoutes);
 
 const startServer = async () => {
   try {
