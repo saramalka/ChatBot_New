@@ -43,3 +43,12 @@ html, body {
       overflow-anchor: none; 
       background: linear-gradient(to right,#a8edea,#fed6e3);
      }
+.p-card{
+box-shadow: none;
+background-color: transparent;
+}
+.p-paginator-bottom{
+  box-shadow: none;
+  background-color: transparent;
+  border:none
+}

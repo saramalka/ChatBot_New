@@ -17,6 +17,7 @@ export default function Navbar() {
       if (isLoggedIn) {
         navigate('/chat');
       } else {
+        alert('you hove to register')
         navigate('/');
       }
     } },

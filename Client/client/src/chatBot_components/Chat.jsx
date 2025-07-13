@@ -8,7 +8,8 @@ const ChatComponent = () => {
   const [newMessage, setNewMessage] = useState('');
   const [isBotTyping, setIsBotTyping] = useState(false);
 
-  const { data: messages = [], refetch } = useGetMessagesQuery();
+  const token = localStorage.getItem('token');
+  const { data: messages = [], refetch } = useGetMessagesQuery(token);
   const [sendMessage] = useSendMessageMutation();
 
   const handleSend = async () => {
