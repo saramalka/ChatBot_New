@@ -6,6 +6,6 @@ const { auth, isAdmin } = require('../middlewares/authMiddleware');
 router.get("/", auth,isAdmin,userController.getUsers)
 router.put('/', auth, isAdmin, userController.updateUser)
 router.delete('/:id', auth, isAdmin, userController.deleteUser)
-router.get('/check-user', userController.checkUser);
+
 
 module.exports = router;

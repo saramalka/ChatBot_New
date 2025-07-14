@@ -134,7 +134,6 @@ console.log(req.body)
 const healthDataGet =async (req, res) => {
   try {
     const data = await HealthDataUser.findOne({ userId: req.user.id });
-    console.log("=== CURRENT USER ID:", req.user.id);
 
     if (!data) return res.status(404).json({ message: 'לא נמצאו נתונים' });
     res.json(data);

@@ -33,19 +33,11 @@ const deleteUser = async (req, res) => {
   res.send('User deleted successfully');
 };
 
-const checkUser = async (req, res) => {
-  const { email } = req.query;
-  if (!email) return res.status(400).json({ error: 'Email is required' });
 
-  const user = await User.findOne({ email });
-  res.json({ exists: !!user });
-};
 
 module.exports = {
-  register,
-  login,
   updateUser,
   getUsers,
   deleteUser,
-  checkUser
+
 };
