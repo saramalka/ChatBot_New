@@ -19,6 +19,6 @@ const userSchema = new mongoose.Schema({
   },
   password: String,
   nutritionGoals: [nutritionGoalSchema],
-});
+},{timestamps: true});
 
 module.exports = mongoose.model('User', userSchema);
