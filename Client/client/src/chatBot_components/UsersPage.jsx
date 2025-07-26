@@ -10,17 +10,15 @@ import { Toast } from 'primereact/toast';
 import UserDetails from './UserDetails';
 import {
   useGetUsersQuery,
-  useAddUserMutation,
   useEditUserMutation,
   useDeleteUserMutation,
 } from '../features/admin/userApiSlice';
 
 export default function UsersPage() {
   const { data = [], refetch } = useGetUsersQuery();
-  const [addUser] = useAddUserMutation();
+ 
   const [updateUser] = useEditUserMutation();
   const [deleteUser] = useDeleteUserMutation();
-
   const [searchTerm, setSearchTerm] = useState('');
   const [filtered, setFiltered] = useState([]);
   const [dialogVisible, setDialogVisible] = useState(false);
@@ -74,14 +72,8 @@ export default function UsersPage() {
   }
 
   try {
-    if (editUser) {
-      await updateUser({ ...editUser, ...form }).unwrap();
-      toast.current.show({ severity: 'success', summary: 'עודכן', detail: 'המשתמש עודכן בהצלחה' });
-    } else {
-      await addUser(form).unwrap();
-      toast.current.show({ severity: 'success', summary: 'נוסף', detail: 'משתמש חדש נוסף' });
-    }
-
+    await updateUser({ ...editUser, ...form }).unwrap();
+    toast.current.show({ severity: 'success', summary: 'עודכן', detail: 'המשתמש עודכן בהצלחה' });
     setDialogVisible(false);
     await refetch();
   } catch (err) {
@@ -106,7 +98,7 @@ export default function UsersPage() {
             placeholder="חיפוש לפי שם, אימייל או תפקיד"
             className="w-6"
           />
-          <Button label="משתמש חדש" icon="pi pi-plus" onClick={openNew} />
+       
         </div>
 
         <DataTable value={filtered} paginator rows={10} dataKey="_id">
@@ -137,7 +129,7 @@ export default function UsersPage() {
       </Card>
 
       <Dialog
-        header={editUser ? 'עריכת משתמש' : 'משתמש חדש'}
+        header= 'עריכת משתמש'
         visible={dialogVisible}
         onHide={() => setDialogVisible(false)}
         footer={
